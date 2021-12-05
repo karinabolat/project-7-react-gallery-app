@@ -5,6 +5,7 @@ import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import Nav from './Nav';
 import SearchForm from './SearchForm';
 import Gallery from './Gallery';
+import Container from './Container';
 import NotFound from './NotFound';
 import Home from './Home';
 import apiKey from './config.js';
@@ -15,7 +16,7 @@ const apiK = apiKey;
 // App's main Class container
 class App extends Component {
 
-  state = {searchedImages: [], catsImages: [], dogsImages: [], frogsImages: [], searchQuery: '', isLoading: true}
+  state = {catsImages: [], dogsImages: [], frogsImages: []}
 
   componentDidMount() {
     this.performSearchCats('cats');
@@ -44,13 +45,6 @@ class App extends Component {
       .catch(err => console.log('Error fetching data: ', err))
   }
 
-  performSearch = (query) => {
-    fetch(`https://www.flickr.com/services/rest/?method=flickr.photos.search&api_key=9843ea74d7cf2598f736313c0b64b832&tags=${query}&per_page=24&format=json&nojsoncallback=1`)
-      .then(response => response.json())
-      .then(responseData => this.setState({searchedImages: responseData.photos.photo, searchQuery: query, isLoading: false}))
-      .catch(err => console.log('Error fetching data: ', err));
-  }
-
   render() {
     return (
       <BrowserRouter>
@@ -63,7 +57,7 @@ class App extends Component {
             <Route path="/cats" render={() => <Gallery query={this.state.catsImages} title={'cats'} />} />
             <Route path="/dogs" render={() => <Gallery query={this.state.dogsImages} title={'dogs'}/>} />
             <Route path="/frogs" render={() => <Gallery query={this.state.frogsImages} title={'frogs'}/>}/>
-            <Route path="/search/:query" render={() => this.state.isLoading? <p>Loading...</p> : <Gallery query={this.state.searchedImages} title={this.state.searchQuery} />} />
+            <Route path="/search/:query" render={({match}) => <Container searchQuery={match.params.query} />}/>
             <Route component={NotFound} />
           </Switch>
         </div>
