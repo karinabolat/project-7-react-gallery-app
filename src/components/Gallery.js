@@ -4,7 +4,7 @@ import React from 'react';
 import Photo from './Photo';
 import NoResults from './NoResults';
 
-// Component to iterate through array of images
+// Component to iterate through an array of images
 const Gallery = (props) => {
     const results = props.query;
     let images;
